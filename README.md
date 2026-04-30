@@ -8,7 +8,7 @@ A Discord bot that automatically tracks new Tesla software versions from [notate
 
 - Automatically checks for new Tesla software versions every 15 minutes
 - Posts a rich embed with release notes when a new version is detected
-- Optional HW3/HW4 compatibility poll (currently disabled, easy to re-enable)
+- Optional poll for each version (disabled by default, see [Enabling Polls](#enabling-polls))
 - Slash commands for manual control (`/check_now`, `/add_version`, `/summary`, `/set_channel`)
 - SQLite database to track known versions
 - Docker support with auto-restart
@@ -97,7 +97,7 @@ RSS_FEED_URL=https://www.notateslaapp.com/rss
 |---------|------------|-------------|
 | `/check_now` | Admin | Force an immediate check for new versions |
 | `/add_version <version>` | Admin | Manually add a version and post it |
-| `/summary [version]` | Everyone | Show poll results for a version |
+| `/summary [version]` | Everyone | Show poll results for a version (requires polls enabled) |
 | `/set_channel #channel` | Admin | Change the update channel |
 
 ## Project Structure
@@ -120,19 +120,19 @@ discord-tesla-update-bot/
     version.py            # TeslaVersion dataclass
   utils/
     embed_builder.py      # Builds Discord embeds
-    poll_builder.py       # Builds Discord polls (currently disabled)
+    poll_builder.py       # Builds Discord polls (optional)
   data/
     bot.db                # SQLite database (created at runtime)
 ```
 
-## Re-enabling Polls
+## Enabling Polls
 
-The HW3/HW4 compatibility poll is currently commented out. To re-enable it, uncomment the poll lines in:
+The bot supports an optional poll for each new version (e.g. to ask users about their experience). Polls are **disabled by default**. To enable them:
 
-- `cogs/version_tracker.py` (lines in `_post_version`)
-- `cogs/commands.py` (lines in `add_version`)
-
-Search for `# poll disabled for now` to find the relevant sections.
+1. Edit `utils/poll_builder.py` to customize the poll question and answer options
+2. Uncomment the poll lines in `cogs/version_tracker.py` (in `_post_version`) and `cogs/commands.py` (in `add_version`)
+3. Search for `# poll disabled for now` to find the relevant sections
+4. Make sure the bot has the **Create Polls** permission in Discord
 
 ## Data Source
 
