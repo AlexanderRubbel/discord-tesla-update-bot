@@ -1,0 +1,12 @@
+services:
+  tesla-bot:
+    build: .
+    container_name: tesla-update-bot
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - bot-data:/app/data
+
+volumes:
+  bot-data:
